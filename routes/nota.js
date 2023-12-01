@@ -21,6 +21,21 @@ nota.get("/:id([0-9]{1,3})", async (req, res, next) => {
     }
 });
 
+// Insertar nota
+nota.post("/", async (req, res, next) => {
+    const { titulo, texto, fecha, id_usuario } = req.body;
+
+    let insertQuery = "INSERT INTO nota (titulo, texto, fecha, id_usuario) VALUES (?, ?, ?, ?)";
+    let query = mysql.format(insertQuery, [titulo, texto, fecha, id_usuario]);
+    const result = await db.query(query);
+
+    if (result.affectedRows > 0) {
+        return res.status(201).json({code: 201, message: "Nota insertada correctamente"});
+    } else {
+        return res.status(500).json({code: 500, message: "Hubo un error al insertar la nota"});
+    }
+});
+
 // Delete a note by its specific id
 nota.delete("/:id([0-9]{1,3})", async (req, res, next) => {
     const id = req.params.id;
