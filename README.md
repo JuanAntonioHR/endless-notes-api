@@ -2,13 +2,13 @@
 ![Badge en Desarollo](https://img.shields.io/badge/STATUS-EN%20DESAROLLO-green)
 
 ## Run
+
+Run this comand execute the api:
 ```
 npm start
 ```
-Run this comand execute the api
 
 These commands are to modify the data in the database:
-
 ```
 -- Aumentar un día en todos los registros de "fecha"
 update nota
