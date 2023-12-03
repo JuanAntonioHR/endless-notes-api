@@ -3,7 +3,7 @@
 
 ## Run
 
-npm run start to execute the api
+"npm start" to execute the api
 
 These commands are to modify the data in the database:
 
