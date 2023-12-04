@@ -30,9 +30,13 @@ nota.post("/", async (req, res, next) => {
     const result = await db.query(query);
 
     if (result.affectedRows > 0) {
-        return res.status(201).json({code: 201, message: "Nota insertada correctamente"});
+        // Fetch the new note
+        const newNoteQuery = "SELECT *, CONVERT_TZ(fecha, '-00:00', @@global.time_zone) as fecha FROM nota WHERE id_nota = ?";
+        const newNote = await db.query(mysql.format(newNoteQuery, [result.insertId]));
+
+        return res.status(201).json({ code: 201, message: "Nota insertada correctamente", newNote: newNote[0] });
     } else {
-        return res.status(500).json({code: 500, message: "Hubo un error al insertar la nota"});
+        return res.status(500).json({ code: 500, message: "Hubo un error al insertar la nota" });
     }
 });
 
