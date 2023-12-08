@@ -6,6 +6,7 @@ const app = express()
 //Routes
 const nota = require('./routes/nota')
 const user = require('./routes/user')
+const textToSpeech = require('./routes/api/text-to-speech')
 
 //Middlewares
 const auth = require('./middlewares/auth')
@@ -22,6 +23,7 @@ app.get('/', index)
 app.use("/user", user)
 // app.use(auth)
 app.use("/notas", nota)
+app.use("/api", textToSpeech)
 app.use(notFound)
 
 app.listen(process.env.PORT || 3000, () =>  {
