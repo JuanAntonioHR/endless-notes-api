@@ -4,7 +4,7 @@ const nota = express.Router();
 const db = require('../config/database');
 
 // Notas de un usuario en especifico
-nota.get("/:id([0-9]{1,3})", async (req, res, next) => {
+nota.get("/:id([0-9]{1,9})", async (req, res, next) => {
     const id = req.params.id;
 
     console.log(id);
@@ -41,7 +41,7 @@ nota.post("/", async (req, res, next) => {
 });
 
 // Delete a note by its specific id
-nota.delete("/:id([0-9]{1,3})", async (req, res, next) => {
+nota.delete("/:id([0-9]{1,9})", async (req, res, next) => {
     const id = req.params.id;
 
     let deleteQuery = "DELETE FROM nota WHERE id_nota = ?";

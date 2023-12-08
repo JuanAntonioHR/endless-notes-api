@@ -46,6 +46,16 @@ user.post("/login", async(req, res, next) => {
     return res.status(500).json({ code: 500, message: "Campos incompletos" })
 })
 
+user.delete("/:id([0-9]{1,9})", async(req, res, next) => {
+    const query = `DELETE FROM usuario WHERE id_usuario = ${req.params.id};`
+    const rows = await db.query(query)
+
+    if(rows.affectedRows == 1) {
+        return res.status(200).json({ code: 200, message: "Usuario borrado correctamente" })
+    }
+    return res.status(404).json({ code: 404, message: "Usuario no encontrado" })
+})
+
 user.get("/", async(req, res, next) => {
     const query = "SELECT * FROM usuario"
     const rows = await db.query(query)
