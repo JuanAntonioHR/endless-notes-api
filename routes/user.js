@@ -30,7 +30,7 @@ user.post("/login", async(req, res, next) => {
     if(correo) {
         if(rows.length == 1) {
             const comparar = bcrypt.compareSync(contrasena, rows[0].contrasena)
-            if(comparar) {
+            if(comparar) {S
                 const token = jwt.sign({
                     id_usuario: rows[0].id_usuario,
                     correo: rows[0].correo
@@ -42,6 +42,45 @@ user.post("/login", async(req, res, next) => {
         } else {
             return res.status(200).json({ code: 401, message: "Usuario incorrecto" })
         }
+    }
+    return res.status(500).json({ code: 500, message: "Campos incompletos" })
+})
+
+//Modificar usuario (solo email, nombre y contraseña)
+user.put("/:id([0-9]{1,9})", async(req, res, next) => {
+    const { nombre, correo, contrasena } = req.body
+
+    if(nombre && correo && contrasena) {
+        let query = `SELECT * FROM usuario WHERE id_usuario = ${req.params.id};`
+        const rows = await db.query(query)
+
+        if(rows.length == 1) {
+            let hash;
+            if (contrasena.startsWith('$2a$') || contrasena.startsWith('$2b$') || contrasena.startsWith('$2x$') || contrasena.startsWith('$2y$')) {
+                hash = contrasena; // password is already hashed
+            } else {
+                hash = bcrypt.hashSync(contrasena, 13); // password is not hashed
+            }
+
+            const user = rows[0];
+            const updates = [];
+            if (nombre !== user.nombre) updates.push(`nombre = '${nombre}'`);
+            if (correo !== user.correo) updates.push(`correo = '${correo}'`);
+            if (hash !== user.contrasena) updates.push(`contrasena = '${hash}'`);
+
+            if (updates.length > 0) {
+                query = `UPDATE usuario SET ${updates.join(', ')} WHERE id_usuario = ${req.params.id};`
+                const updateRows = await db.query(query)
+
+                if(updateRows.affectedRows == 1) {
+                    return res.status(200).json({ code: 200, message: "Usuario actualizado correctamente" })
+                }
+                return res.status(500).json({ code: 500, message: "Ocurrió un error" })
+            } else {
+                return res.status(200).json({ code: 200, message: "No changes were made" })
+            }
+        }
+        return res.status(404).json({ code: 404, message: "Usuario no encontrado" })
     }
     return res.status(500).json({ code: 500, message: "Campos incompletos" })
 })
