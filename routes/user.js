@@ -85,6 +85,22 @@ user.put("/:id([0-9]{1,9})", async(req, res, next) => {
     return res.status(500).json({ code: 500, message: "Campos incompletos" })
 })
 
+//Modificar pregunta y respuesta de seguridad
+user.put("/security/:id([0-9]{1,9})", async(req, res, next) => {
+    const { respuesta, pregunta } = req.body
+
+    if(respuesta && pregunta) {
+        const query = `UPDATE usuario SET respuesta = '${respuesta}', pregunta = '${pregunta}' WHERE id_usuario = ${req.params.id};`
+        const rows = await db.query(query)
+
+        if(rows.affectedRows == 1) {
+            return res.status(200).json({ code: 200, message: "Pregunta y respuesta actualizadas correctamente" })
+        }
+        return res.status(500).json({ code: 500, message: "Ocurrió un error" })
+    }
+    return res.status(500).json({ code: 500, message: "Campos incompletos" })
+})
+
 user.delete("/:id([0-9]{1,9})", async(req, res, next) => {
     const query = `DELETE FROM usuario WHERE id_usuario = ${req.params.id};`
     const rows = await db.query(query)
