@@ -56,6 +56,22 @@ nota.delete("/:id([0-9]{1,9})", async (req, res, next) => {
     }
 });
 
+// Delete all notes from a user
+nota.delete("/user/:id([0-9]{1,9})", async (req, res, next) => {
+    const id = req.params.id;
+
+    let deleteQuery = "DELETE FROM nota WHERE id_usuario = ?";
+    let query = mysql.format(deleteQuery, [id]);
+    const result = await db.query(query);
+
+    if (result.affectedRows > 0) {
+        return res.status(200).json({code: 200, message: "Notas eliminadas correctamente"})
+    } else {
+        // No note found with the given id
+        return res.status(404).send({code: 404, message: "No se encontraron notas"});
+    }
+});
+
 /** Borrar al final esta función */
 nota.get("/", async (req, res, next) => {
     const notas = await db.query("SELECT * FROM nota");
