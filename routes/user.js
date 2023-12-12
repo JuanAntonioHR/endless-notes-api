@@ -4,13 +4,13 @@ const bcrypt = require('bcrypt')
 const user = express.Router()
 const db = require('../config/database')
 
-user.post("/signin", async(req, res, next) => {
-    const { nombre, correo, contrasena, respuesta, pregunta } = req.body
+user.post("/signup", async(req, res, next) => {
+    const { nombre, correo, contrasena } = req.body
 
-    if(nombre && correo && contrasena && respuesta && pregunta) {
+    if(nombre && correo && contrasena) {
         const hash = bcrypt.hashSync(contrasena, 13)
 
-        const query = `INSERT INTO usuario (nombre, correo, contrasena, respuesta, pregunta) VALUES ('${nombre}', '${correo}', '${hash}', '${respuesta}', '${pregunta}');`
+        const query = `INSERT INTO usuario (nombre, correo, contrasena) VALUES ('${nombre}', '${correo}', '${hash}');`
         const rows = await db.query(query)
 
         if (rows.affectedRows == 1) {
