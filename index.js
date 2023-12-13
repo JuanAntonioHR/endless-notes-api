@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.get('/', index)
 app.use("/user", user)
-// app.use(auth)
+app.use(auth)
 app.use("/notas", nota)
 app.use("/api", textToSpeech)
 app.use(notFound)

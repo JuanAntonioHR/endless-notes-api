@@ -72,10 +72,4 @@ nota.delete("/user/:id([0-9]{1,9})", async (req, res, next) => {
     }
 });
 
-/** Borrar al final esta función */
-nota.get("/", async (req, res, next) => {
-    const notas = await db.query("SELECT * FROM nota");
-    return res.status(200).json({code: 1, message: notas});
-});
-
 module.exports = nota;

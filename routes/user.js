@@ -30,12 +30,12 @@ user.post("/login", async(req, res, next) => {
     if(correo) {
         if(rows.length == 1) {
             const comparar = bcrypt.compareSync(contrasena, rows[0].contrasena)
-            if(comparar) {S
+            if(comparar) {
                 const token = jwt.sign({
                     id_usuario: rows[0].id_usuario,
                     correo: rows[0].correo
                 }, "debugkey")
-                return res.status(200).json({ code: 200, message: token })
+                return res.status(200).json({ code: 200, message: token, user: rows[0]})
             } else {
                 return res.status(200).json({ code: 401, message: "Contraseña incorrecta" })
             }
@@ -109,13 +109,6 @@ user.delete("/:id([0-9]{1,9})", async(req, res, next) => {
         return res.status(200).json({ code: 200, message: "Usuario borrado correctamente" })
     }
     return res.status(404).json({ code: 404, message: "Usuario no encontrado" })
-})
-
-user.get("/", async(req, res, next) => {
-    const query = "SELECT * FROM usuario"
-    const rows = await db.query(query)
-
-    return res.status(200).json({ code: 200, message: rows })
 })
 
 module.exports = user
